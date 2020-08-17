@@ -7,7 +7,7 @@ class WeatherApplication:Application() {
 
     companion object{
         lateinit var context: Context
-        const val TOKEN=""
+        const val TOKEN="dRFXa10sLnwLydoj"
     }
 
 
