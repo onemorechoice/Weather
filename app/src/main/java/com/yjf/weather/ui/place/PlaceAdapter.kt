@@ -11,6 +11,7 @@ import com.yjf.weather.PlaceFragment
 import com.yjf.weather.R
 import com.yjf.weather.logic.model.Place
 import com.yjf.weather.ui.weather.WeatherActivity
+import kotlinx.android.synthetic.main.activity_weather.*
 import kotlinx.android.synthetic.main.plate_item.view.*
 
 class PlaceAdapter(val fragment:PlaceFragment,private val placeList:List<Place>):
@@ -25,18 +26,29 @@ class PlaceAdapter(val fragment:PlaceFragment,private val placeList:List<Place>)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view=LayoutInflater.from(parent.context).inflate(R.layout.plate_item,parent,false)
         val viewHolder=ViewHolder(view)
-          viewHolder.itemView.setOnClickListener{
-               val position=viewHolder.adapterPosition
-              val place=placeList[position]
-              val intent= Intent(parent.context,WeatherActivity::class.java).apply {
-                  putExtra("location_lng",place.location.lng)
-                  putExtra("location_lat",place.location.lat)
-                  putExtra("place_name",place.name)
+          viewHolder.itemView.setOnClickListener {
+              val position = viewHolder.adapterPosition
+              val place = placeList[position]
+              val activity=fragment.activity
+              if ( activity is WeatherActivity) {
+                  activity.drawerLayout.closeDrawers()
+                  activity.viewModel.locationLng=place.location.lng
+                  activity.viewModel.locationLat=place.location.lat
+                  activity.viewModel.placeName=place.name
+                  activity.refreshWeather()
+              }else{
+              val intent = Intent(parent.context, WeatherActivity::class.java).apply {
+                  putExtra("location_lng", place.location.lng)
+                  putExtra("location_lat", place.location.lat)
+                  putExtra("place_name", place.name)
               }
-              fragment.viewModel.savePlace(place)
-
               fragment.startActivity(intent)
               fragment.activity?.finish()
+          }
+
+              fragment.viewModel.savePlace(place)
+
+
           }
          return viewHolder
     }
