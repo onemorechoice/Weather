@@ -1,5 +1,6 @@
 package com.yjf.weather.ui.place
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
@@ -11,7 +12,7 @@ class PlaceViewModel:ViewModel() {
 
     val placeList=ArrayList<Place>()
 
-    val placeLiveData=Transformations.switchMap(searchLiveData){
+    val placeLiveData: LiveData<Result<List<Place>>> = Transformations.switchMap(searchLiveData){
         query->Repository.searchPlaces(query)
     }
 
@@ -19,6 +20,12 @@ class PlaceViewModel:ViewModel() {
         searchLiveData.value=query
     }
 
+
+    fun savePlace(place: Place)=Repository.savePlace(place)
+
+    fun getSavePlace()=Repository.getSavePlace()
+
+    fun isPlaceSaved()=Repository.isPlaceSaved()
 
 
 
